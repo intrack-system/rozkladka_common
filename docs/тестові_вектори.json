@@ -1,0 +1,30 @@
+{
+  "note": "ТЕСТОВІ ключі; у бойових застосунках — відкритий ключ свого InTrack",
+  "intrack_private_pkcs8_pem": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQguUTfKpqiYJGtZYZ/\nMhnS/Cf7nUvR3bsuWfSyhpTPy12hRANCAAQ7/3uXvovL5RoHEsXdrdxErTUZMJPG\nLmTTs2qDsghinGrFvHtWYY0/ntaeMH4wpWZO6WN/9L7TTZ3WsSoiKTfF\n-----END PRIVATE KEY-----\n",
+  "intrack_public_spki_b64": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEO/97l76Ly+UaBxLF3a3cRK01GTCTxi5k07Nqg7IIYpxqxbx7VmGNP57WnjB+MKVmTuljf/S+002d1rEqIik3xQ==",
+  "device_private_pkcs8_pem": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgps9A9105eGlnaeWT\nzakm32z3cnPNn89SJVaOosu9yhKhRANCAASYQl+pVGIo/IfYEZCLOGRz3eyI1uBS\nvq0CsaWxfLnrtlekmZdfVu301im8efL0V5bRS0wKpnqHoqzgzjBr8RqM\n-----END PRIVATE KEY-----\n",
+  "device_public_spki_b64": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEmEJfqVRiKPyH2BGQizhkc93siNbgUr6tArGlsXy567ZXpJmXX1bt9NYpvHny9FeW0UtMCqZ6h6Ks4M4wa/EajA==",
+  "device_code": "MHZP9RX5M563",
+  "device_code_display": "MHZP-9RX5-M563",
+  "activation_payload": {
+    "v": 1,
+    "aid": "6690191e-9e1c-48ef-bef6-cb7704abf448",
+    "app": "rozkladka_e",
+    "dev": "MHZP9RX5M563",
+    "sub": {
+      "id": 42,
+      "name": "Пупкін Петро Петрович",
+      "position": "інженер"
+    },
+    "dept": {
+      "id": 89,
+      "name": "4 ТВУЗ"
+    },
+    "iat": "2026-10-31T08:00:00.000Z",
+    "scan_before": "2026-11-07T08:00:00.000Z",
+    "by": "Адміністратор"
+  },
+  "activation_token": "eyJhbGciOiJFUzI1NiIsInR5cCI6IlJaQSJ9.eyJ2IjoxLCJhaWQiOiI2NjkwMTkxZS05ZTFjLTQ4ZWYtYmVmNi1jYjc3MDRhYmY0NDgiLCJhcHAiOiJyb3prbGFka2FfZSIsImRldiI6Ik1IWlA5Ulg1TTU2MyIsInN1YiI6eyJpZCI6NDIsIm5hbWUiOiLQn9GD0L_QutGW0L0g0J_QtdGC0YDQviDQn9C10YLRgNC-0LLQuNGHIiwicG9zaXRpb24iOiLRltC90LbQtdC90LXRgCJ9LCJkZXB0Ijp7ImlkIjo4OSwibmFtZSI6IjQg0KLQktCj0JcifSwiaWF0IjoiMjAyNi0xMC0zMVQwODowMDowMC4wMDBaIiwic2Nhbl9iZWZvcmUiOiIyMDI2LTExLTA3VDA4OjAwOjAwLjAwMFoiLCJieSI6ItCQ0LTQvNGW0L3RltGB0YLRgNCw0YLQvtGAIn0.D0ySErqQ6ajvOb-XNKXAcrtcyv4UZtFjEo7pdd5zzCQS2P-ypACU5TgdXH1PTQy6e_110MJbHZKf7XUs_CbZ4w",
+  "snapshot_plain_b64": "U1FMaXRlIGZvcm1hdCAzACDigJQg0YLQtdGB0YLQvtCy0LjQuSDQstC80ZbRgdGCINCx0LDQt9C4",
+  "snapshot_rzs_b64": "UlpTMQpleUpoYkdjaU9pSkZVekkxTmlJc0luUjVjQ0k2SWxKYVV5SjkuZXlKMklqb3hMQ0poY0hBaU9pSnliM3ByYkdGa2EyRmZaU0lzSW1GcFpDSTZJalkyT1RBeE9URmxMVGxsTVdNdE5EaGxaaTFpWldZMkxXTmlOemN3TkdGaVpqUTBPQ0lzSW00aU9qRXNJblFpT2lJeU1ESTJMVEV3TFRNeFZEQTVPakF3T2pBd0xqQXdNRm9pTENKd2RXSWlPaUpOUm10M1JYZFpTRXR2V2tsNmFqQkRRVkZaU1V0dldrbDZhakJFUVZGalJGRm5RVVZ0UlVwbWNWWlNhVXRRZVVneVFrZFJhWHBvYTJNNU0zTnBUbUpuVlhJMmRFRnlSMnh6V0hrMU5qZGFXSEJLYlZoWU1XSjBPVTVaY0haSWJuazVSbVZYTUZWMFRVTnhXalpvTmt0ek5FMDBkMkZmUldGcVFTSXNJbVZ3YXlJNklrMUdhM2RGZDFsSVMyOWFTWHBxTUVOQlVWbEpTMjlhU1hwcU1FUkJVV05FVVdkQlJUZENTRE4xWlRBd2IzcFZhRmt6YjNjeFUyRlhhakV6WWxWRWVWbERXREJQY0hsaVVXTXRTVWRXWkVaRVVWbEtNMmRPWkZOdGJHVnVjRkZ2TVZaM2RGTXlaMGh6VWpSQ1dEQjBWbkZZTWtwZlMwSktTSE5SSWl3aWFYWWlPaUkzTFVjeVJVcGhORTB0V1ZSWU9TMTVJaXdpZEdGbklqb2laRXhPZW5KWWREaHFSVEpoWW5wd1owOVRNamxuUVNJc0luTm9ZVEkxTmlJNkltWXhNakkxTnpjek56QXpNalUyTURsaE0yRTBOakZsTm1Sa01EWXlaalptTm1Kak5qTXdaR1l5TmpabE1UZzRaR1prTWpGaU1HRmtNamhqTUdabU1tUWlmUS52YTFrakFRMWdNblBBczdGOTE2UGN6MlYyaGNGa0drOGxfc01sQUgzcUs3MFVIOFgySy1rWEZBRWZDOGhIYWRFT29ucndDZ044Z3U2NWRTOWVSVDFUZwp34PHax4e4NQzyKtz5beWGiM8pV6IjbOxT2IDfasZfuM66FCq5UEd4ipmz7hqI3qQ5S7WkMYJqLf0="
+}
