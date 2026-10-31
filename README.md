@@ -39,6 +39,7 @@ ActivationService.current = activation;
 - Android: `MainActivity` — `FlutterFragmentActivity` (відбиток або PIN через `local_auth`).
 - iPhone: `NSCameraUsageDescription` і `NSFaceIDUsageDescription` в `Info.plist`.
 - Шар бази перед кожним записом викликає `ActivationService.current?.ensureCanEdit()`.
+- `MaterialApp(scaffoldMessengerKey: activationMessengerKey)` і `showActivationErrors()` у `main` — відмову внесення видно з будь-якого екрана.
 - Знімок: активовано — `activation.seal(байти бази)` → `.rzs`; ні — `.db`, як раніше.
 - У написах і назвах у коді пакета назви системи обліку немає (`test/user_texts_test.dart`), як і в застосунках.
 
