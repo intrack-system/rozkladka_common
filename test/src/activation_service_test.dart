@@ -31,7 +31,7 @@ void main() {
 
   ActivationService service() => ActivationService(
     app: 'rozkladka_e',
-    intrackSpki: base64.decode(vectors['intrack_public_spki_b64']),
+    issuerSpki: base64.decode(vectors['intrack_public_spki_b64']),
     key: _FakeKey(),
     store: ActivationStore(dir: () async => dir),
     now: () => now,

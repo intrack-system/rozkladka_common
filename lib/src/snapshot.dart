@@ -15,12 +15,12 @@ Future<Uint8List> sealSnapshot({
   required int counter,
   required List<int> devicePublicSpki,
   required DerSigner sign,
-  required List<int> intrackSpki,
+  required List<int> issuerSpki,
   required DateTime time,
 }) async {
   final eph = generateKeyPair();
   final key = hkdfSha256(
-    ecdh(eph.privateKey, decodeSpki(intrackSpki)),
+    ecdh(eph.privateKey, decodeSpki(issuerSpki)),
     ascii.encode('RZS1'),
     utf8.encode(aid),
   );

@@ -19,7 +19,7 @@ void main() {
     bool firstScan = true,
   }) => verifyActivation(
     t ?? token,
-    intrackSpki: intrack,
+    issuerSpki: intrack,
     app: app,
     deviceCode: dev ?? vectors['device_code'],
     now: now ?? issued.add(const Duration(hours: 1)),

@@ -27,7 +27,7 @@ void main() {
       counter: 7,
       devicePublicSpki: base64.decode(vectors['device_public_spki_b64']),
       sign: (m) => signDer(deviceKey, m),
-      intrackSpki: base64.decode(vectors['intrack_public_spki_b64']),
+      issuerSpki: base64.decode(vectors['intrack_public_spki_b64']),
       time: DateTime.utc(2026, 11, 1),
     );
     expect(ascii.decode(file.sublist(0, 5)), 'RZS1\n');

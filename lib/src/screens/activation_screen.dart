@@ -56,7 +56,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Активація з InTrack')),
+      appBar: AppBar(title: const Text('Активація застосунку')),
       body: ListenableBuilder(
         listenable: widget.service,
         builder: (context, _) => ListView(
@@ -107,8 +107,8 @@ class _NotActivated extends StatelessWidget {
         Text('Застосунок не активовано', style: theme.textTheme.titleLarge),
         const SizedBox(height: 8),
         const Text(
-          'Передайте код телефона адміністратору InTrack. Він видасть '
-          'QR-код активації (або файл), який відкривається тут.',
+          'Передайте код телефона посадовій особі, що веде облік майна. '
+          'Вона видасть QR-код активації (або файл), який відкривається тут.',
         ),
         const SizedBox(height: 16),
         FutureBuilder(
@@ -171,7 +171,8 @@ class ActivationLockedBanner extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       child: Text(
         'Доступ закінчився — внесення змін заблоковане, можна лише зберегти '
-        'знімок. Потрібен новий QR-код від адміністратора InTrack.',
+        'знімок. Потрібен новий QR-код від посадової особи, що веде облік '
+        'майна.',
         style: TextStyle(color: scheme.onErrorContainer),
       ),
     );

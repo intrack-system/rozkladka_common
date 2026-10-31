@@ -17,7 +17,7 @@
 | `lib/src/snapshot.dart` | знімок `.rzs`: ECDH P-256 → HKDF-SHA256 → AES-256-GCM, підписаний заголовок |
 | `lib/src/device_code.dart` | код телефона з відкритого ключа |
 | `lib/src/device_key.dart` | канал до ключа телефона |
-| `lib/src/intrack_key.dart` | відкритий ключ InTrack, вшитий у збірку — визначає, якому InTrack належить застосунок |
+| `lib/src/issuer_key.dart` | відкритий ключ InTrack, вшитий у збірку — визначає, якому InTrack належить застосунок |
 | `lib/src/screens/` | «Застосунок не активовано» / картка доступу, сканер QR-коду |
 | `android/…/RozkladkaCommonPlugin.kt` | ключ у Android Keystore (StrongBox, де є) |
 | `ios/…/RozkladkaCommonPlugin.swift` | ключ у Secure Enclave |
@@ -31,7 +31,7 @@ dependencies:
 ```
 
 ```dart
-final activation = ActivationService(app: 'rozkladka_e', intrackSpki: intrackPublicKey);
+final activation = ActivationService(app: 'rozkladka_e', issuerSpki: issuerPublicKey);
 await activation.load();
 ActivationService.current = activation;
 ```
@@ -40,6 +40,7 @@ ActivationService.current = activation;
 - iPhone: `NSCameraUsageDescription` і `NSFaceIDUsageDescription` в `Info.plist`.
 - Шар бази перед кожним записом викликає `ActivationService.current?.ensureCanEdit()`.
 - Знімок: активовано — `activation.seal(байти бази)` → `.rzs`; ні — `.db`, як раніше.
+- У написах і назвах у коді пакета назви системи обліку немає (`test/user_texts_test.dart`), як і в застосунках.
 
 ## Автори
 

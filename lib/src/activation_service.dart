@@ -15,7 +15,7 @@ class ActivationService extends ChangeNotifier {
 
   /// `rozkladka` (В) · `rozkladka_s` · `rozkladka_e` · `rozkladka_d`.
   final String app;
-  final List<int> intrackSpki;
+  final List<int> issuerSpki;
   final DeviceKey key;
   final ActivationStore _store;
   final DateTime Function() _now;
@@ -25,7 +25,7 @@ class ActivationService extends ChangeNotifier {
 
   ActivationService({
     required this.app,
-    required this.intrackSpki,
+    required this.issuerSpki,
     this.key = const DeviceKey(),
     ActivationStore? store,
     DateTime Function()? now,
@@ -60,7 +60,7 @@ class ActivationService extends ChangeNotifier {
     if (token != null && dev != null) {
       activation = verifyActivation(
         token,
-        intrackSpki: intrackSpki,
+        issuerSpki: issuerSpki,
         app: app,
         deviceCode: dev,
         now: _now(),
@@ -86,7 +86,7 @@ class ActivationService extends ChangeNotifier {
   Future<Activation> activate(String token) async {
     activation = verifyActivation(
       token,
-      intrackSpki: intrackSpki,
+      issuerSpki: issuerSpki,
       app: app,
       deviceCode: await deviceCode(),
       now: _now(),
@@ -107,7 +107,7 @@ class ActivationService extends ChangeNotifier {
     if (isLocked) {
       throw const ActivationException(
         'Доступ закінчився — внесення змін заблоковане. '
-        'Потрібен новий QR-код від адміністратора InTrack.',
+        'Потрібен новий QR-код від посадової особи, що веде облік майна.',
       );
     }
   }
@@ -131,7 +131,7 @@ class ActivationService extends ChangeNotifier {
       counter: _counter,
       devicePublicSpki: await key.publicKey(),
       sign: key.sign,
-      intrackSpki: intrackSpki,
+      issuerSpki: issuerSpki,
       time: _now(),
     );
   }

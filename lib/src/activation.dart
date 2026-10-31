@@ -57,7 +57,7 @@ class Activation {
 /// доступу він не важить.
 Activation verifyActivation(
   String token, {
-  required List<int> intrackSpki,
+  required List<int> issuerSpki,
   required String app,
   required String deviceCode,
   required DateTime now,
@@ -78,12 +78,12 @@ Activation verifyActivation(
     throw fail('Це не QR-код активації');
   }
   final signed = verifyEs256(
-    decodeSpki(intrackSpki),
+    decodeSpki(issuerSpki),
     ascii.encode('${parts[0]}.${parts[1]}'),
     fromB64u(parts[2]),
   );
   if (!signed) {
-    throw fail('QR-код видано не цим InTrack або його змінено');
+    throw fail('QR-код видано не вашою системою обліку майна або його змінено');
   }
   if (body['v'] != 1) throw fail('Невідома версія QR-коду');
   if (body['app'] != app) throw fail('QR-код видано для іншого застосунку');
