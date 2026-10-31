@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'activation.dart';
+import 'activation_service.dart';
 
 /// Ключ `ScaffoldMessenger` застосунку — для повідомлення про заблоковане
 /// внесення з будь-якого екрана.
@@ -14,9 +15,14 @@ final activationMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void showActivationErrors() {
   final previous = PlatformDispatcher.instance.onError;
   PlatformDispatcher.instance.onError = (error, stack) {
-    if (error is ActivationException) {
+    // Застосунок може замкнути базу на рівні SQLite (`PRAGMA query_only`):
+    // тоді відмова приходить як помилка запису в базу лише для читання.
+    final readOnly =
+        (ActivationService.current?.isLocked ?? false) &&
+        error.toString().contains('readonly');
+    if (error is ActivationException || readOnly) {
       activationMessengerKey.currentState?.showSnackBar(
-        SnackBar(content: Text(error.message)),
+        SnackBar(content: Text(lockedMessage)),
       );
       return true;
     }

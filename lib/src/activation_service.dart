@@ -7,6 +7,10 @@ import 'device_code.dart' as code;
 import 'device_key.dart';
 import 'snapshot.dart';
 
+const lockedMessage =
+    'Доступ закінчився — внесення змін заблоковане. '
+    'Потрібен новий QR-код від посадової особи, що веде облік майна.';
+
 /// Активація застосунку. Сплячий режим: доки QR-код не відкрито жодного
 /// разу, застосунок працює як раніше; після — назавжди лише з доступом.
 class ActivationService extends ChangeNotifier {
@@ -104,12 +108,7 @@ class ActivationService extends ChangeNotifier {
 
   /// Кидає [ActivationException], якщо вносити зміни не можна.
   void ensureCanEdit() {
-    if (isLocked) {
-      throw const ActivationException(
-        'Доступ закінчився — внесення змін заблоковане. '
-        'Потрібен новий QR-код від посадової особи, що веде облік майна.',
-      );
-    }
+    if (isLocked) throw const ActivationException(lockedMessage);
   }
 
   /// Знімок `.rzs` для InTrack. Лічильник зберігається до віддачі файла,
