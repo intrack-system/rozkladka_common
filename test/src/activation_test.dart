@@ -60,4 +60,14 @@ void main() {
       expect(a.isExpired(late), isTrue);
     },
   );
+
+  test('після scan_before QR-код не сканується, а виданий доступ чинний', () {
+    final late = DateTime.parse(
+      payload['scan_before'],
+    ).add(const Duration(minutes: 1));
+    expect(() => verify(now: late), throwsA(isA<ActivationException>()));
+    final a = verify(now: late, firstScan: false);
+    expect(a.isExpired(late), isFalse);
+    expect(a.expiresAt, DateTime.parse(payload['exp']));
+  });
 }
