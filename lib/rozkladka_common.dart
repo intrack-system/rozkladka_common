@@ -6,6 +6,7 @@ export 'src/activation_service.dart';
 export 'src/device_code.dart' show formatDeviceCode;
 export 'src/issuer_key.dart';
 export 'src/locked_errors.dart';
+export 'src/receipt_sheet.dart';
 export 'src/screens/activation_screen.dart'
     show ActivationScreen, ActivationLockedBanner;
 export 'src/device_key.dart';

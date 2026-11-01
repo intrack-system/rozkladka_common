@@ -15,7 +15,7 @@ import 'p256.dart';
 // ponytail: формат кодування ще не затверджено (перша цифра в позначках), тож
 // змінювати його вільно, поки пакетами не користуються.
 const _packageMagic = 'RZT1\n';
-const _invitePrefix = 'RZI1.';
+const _invitePrefix = 'RZP1.';
 const _confirmPrefix = 'RZC1.';
 const _chunkPrefix = 'RZQ1';
 
