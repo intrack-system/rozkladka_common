@@ -144,6 +144,27 @@ Uint8List hkdfSha256(List<int> ikm, List<int> salt, List<int> info) {
   );
 }
 
+/// Розшифрування AES-256-GCM; кидає виняток, якщо вміст чи тег змінено.
+Uint8List aesGcmDecrypt(
+  List<int> key,
+  List<int> iv,
+  List<int> aad,
+  List<int> body,
+  List<int> tag,
+) {
+  final cipher = GCMBlockCipher(AESEngine())
+    ..init(
+      false,
+      AEADParameters(
+        KeyParameter(Uint8List.fromList(key)),
+        128,
+        Uint8List.fromList(iv),
+        Uint8List.fromList(aad),
+      ),
+    );
+  return cipher.process(Uint8List.fromList([...body, ...tag]));
+}
+
 Uint8List randomBytes(int length) {
   final r = Random.secure();
   return Uint8List.fromList(List.generate(length, (_) => r.nextInt(256)));

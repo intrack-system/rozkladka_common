@@ -8,3 +8,7 @@ export 'src/issuer_key.dart';
 export 'src/locked_errors.dart';
 export 'src/screens/activation_screen.dart'
     show ActivationScreen, ActivationLockedBanner;
+export 'src/device_key.dart';
+export 'src/screens/qr_code_views.dart';
+export 'src/screens/qr_scan_screen.dart';
+export 'src/transfer.dart';

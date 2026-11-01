@@ -18,7 +18,8 @@
 | `lib/src/device_code.dart` | код телефона з відкритого ключа |
 | `lib/src/device_key.dart` | канал до ключа телефона |
 | `lib/src/issuer_key.dart` | відкритий ключ InTrack, вшитий у збірку — визначає, якому InTrack належить застосунок |
-| `lib/src/screens/` | «Застосунок не активовано» / картка доступу, сканер QR-коду |
+| `lib/src/transfer.dart` | передача між телефонами: запрошення, пакет `RZT1`, підтвердження, серія QR-кодів (формат ще не затверджено) |
+| `lib/src/screens/` | «Застосунок не активовано» / картка доступу, сканер QR-коду, показ і збір серії QR-кодів |
 | `android/…/RozkladkaCommonPlugin.kt` | ключ у Android Keystore (StrongBox, де є) |
 | `ios/…/RozkladkaCommonPlugin.swift` | ключ у Secure Enclave |
 
