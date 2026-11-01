@@ -28,7 +28,7 @@
 ```yaml
 dependencies:
   rozkladka_common:
-    git: git@github.com:intrack-system/rozkladka_common.git
+    git: https://github.com/intrack-system/rozkladka_common.git
 ```
 
 ```dart

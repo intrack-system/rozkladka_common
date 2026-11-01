@@ -158,6 +158,10 @@ Future<Uint8List> sealTransfer({
   required String senderName,
   required DeviceKey deviceKey,
   String? activationToken,
+
+  /// Застосунок передавача, якщо він інший за приймача (склад → експлуатація):
+  /// його доступ перевіряється за ним.
+  String? senderApp,
 }) async {
   final eph = generateKeyPair();
   final plain = gzip.encode(payload);
@@ -173,6 +177,7 @@ Future<Uint8List> sealTransfer({
       jsonEncode({
         'v': 1,
         'app': invite.app,
+        'from': senderApp ?? invite.app,
         'n': senderName,
         'pub': b64u(await deviceKey.publicKey()),
         'epk': b64u(encodeSpki(eph.publicKey)),
@@ -242,7 +247,7 @@ Future<Uint8List> sealTransfer({
         m['n'] as String,
         senderPub,
         m['a'] as String?,
-        m['app'] as String,
+        m['from'] as String,
         issuerSpki,
         now,
       ),
