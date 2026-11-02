@@ -145,7 +145,10 @@ class _ActivationCard extends StatelessWidget {
           row('Особа', a.personName),
           if (a.position.isNotEmpty) row('Посада', a.position),
           row('Підрозділ', a.departmentName),
-          row('Доступ діє до', _date(a.expiresAt)),
+          if (a.self case final me?) row('Номер у списку', '${me.id}'),
+          if (a.staff.isNotEmpty)
+            row('Особовий склад у списку', '${a.staff.length}'),
+          row('Дозвіл діє до', _date(a.expiresAt)),
           row('Код телефона', formatDeviceCode(a.deviceCode)),
           SwitchListTile(
             title: const Text('Відбиток або PIN на знімок'),
@@ -170,9 +173,9 @@ class ActivationLockedBanner extends StatelessWidget {
       color: scheme.errorContainer,
       padding: const EdgeInsets.all(12),
       child: Text(
-        'Доступ закінчився — внесення змін заблоковане, можна лише зберегти '
-        'знімок. Потрібен новий QR-код від посадової особи, що веде облік '
-        'майна.',
+        'Дозвіл закінчився: місяць можна переглядати й зберігати знімок, '
+        'вносити зміни не можна (крім напрацювання). Потрібен новий QR-код '
+        'від посадової особи, що веде облік майна.',
         style: TextStyle(color: scheme.onErrorContainer),
       ),
     );

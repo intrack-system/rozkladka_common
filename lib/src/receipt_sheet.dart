@@ -51,6 +51,11 @@ class ReceiptSheet {
   final String departmentName;
   final String? documentNumber;
   final String? documentDate;
+
+  /// Вид документа-підстави: `transfer_act` — акт приймання-передачі
+  /// основних засобів, `invoice` — видаткова накладна, `works_act` — акт
+  /// приймання виконаних робіт; null — не вказано (старі таблички).
+  final String? documentKind;
   final DateTime issuedAt;
   final List<ReceiptItem> items;
 
@@ -59,6 +64,7 @@ class ReceiptSheet {
     required this.departmentName,
     this.documentNumber,
     this.documentDate,
+    this.documentKind,
     required this.issuedAt,
     required this.items,
   });
@@ -83,8 +89,9 @@ class ReceiptSheet {
                 utf8.decode(ZLibCodec(raw: true).decode(fromB64u(parts[1]))),
               )
               as Map<String, dynamic>;
-      if (m['v'] != 1)
+      if (m['v'] != 1) {
         throw const ActivationException('Невідома версія таблички');
+      }
       final dept = m['dept'] as Map<String, dynamic>;
       final doc = m['doc'] as Map<String, dynamic>;
       return ReceiptSheet(
@@ -92,6 +99,7 @@ class ReceiptSheet {
         departmentName: dept['name'] as String,
         documentNumber: doc['n'] as String?,
         documentDate: doc['d'] as String?,
+        documentKind: doc['k'] as String?,
         issuedAt: DateTime.parse(m['at'] as String),
         items: [
           for (final r in m['it'] as List) ReceiptItem.fromRow(r as List),

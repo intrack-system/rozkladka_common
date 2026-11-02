@@ -22,7 +22,11 @@ void showActivationErrors() {
         error.toString().contains('readonly');
     if (error is ActivationException || readOnly) {
       activationMessengerKey.currentState?.showSnackBar(
-        SnackBar(content: Text(lockedMessage)),
+        SnackBar(
+          content: Text(
+            error is ActivationException ? error.message : lockedMessage,
+          ),
+        ),
       );
       return true;
     }

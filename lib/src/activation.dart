@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'p256.dart';
 
@@ -9,6 +10,30 @@ class ActivationException implements Exception {
 
   @override
   String toString() => message;
+}
+
+/// Особа зі списку особового складу підрозділу (з установчого наказу).
+/// Номер — чотиризначний, у межах підрозділу; нові отримують наступний.
+class StaffMember {
+  final int id;
+
+  /// Прізвище з ініціалами.
+  final String name;
+
+  /// Позначки функцій: `k` — комірник, `z` — виконує функції комірника на
+  /// час його відсутності, `e` — експлуатує обладнання, `m` — може бути
+  /// матеріально відповідальною особою.
+  final String roles;
+
+  const StaffMember(this.id, this.name, this.roles);
+
+  bool get isKeeper => roles.contains('k');
+  bool get isDeputyKeeper => roles.contains('z');
+  bool get operates => roles.contains('e');
+  bool get mayBeResponsible => roles.contains('m');
+
+  /// Може видавати майно зі складу.
+  bool get mayIssue => isKeeper || isDeputyKeeper;
 }
 
 /// Доступ, виданий InTrack (QR-код або файл `.rza`).
@@ -33,6 +58,12 @@ class Activation {
   final DateTime scanBefore;
   final String issuedBy;
 
+  /// Номер цієї особи в списку [staff]; null — QR-код без списку.
+  final int? staffId;
+
+  /// Особовий склад підрозділу: кому можна передавати й від кого приймати.
+  final List<StaffMember> staff;
+
   const Activation({
     required this.token,
     required this.aid,
@@ -47,7 +78,13 @@ class Activation {
     required this.expiresAt,
     required this.scanBefore,
     required this.issuedBy,
+    this.staffId,
+    this.staff = const [],
   });
+
+  StaffMember? get self => staff.where((m) => m.id == staffId).firstOrNull;
+
+  StaffMember? memberById(int id) => staff.where((m) => m.id == id).firstOrNull;
 
   bool isExpired(DateTime now) => !now.isBefore(expiresAt);
 }
@@ -64,28 +101,10 @@ Activation verifyActivation(
   bool firstScan = true,
 }) {
   const fail = ActivationException.new;
-  final parts = token.trim().split('.');
-  if (parts.length != 3) throw fail('Це не QR-код активації');
-  final Map<String, dynamic> head;
-  final Map<String, dynamic> body;
-  try {
-    head = jsonDecode(utf8.decode(fromB64u(parts[0])));
-    body = jsonDecode(utf8.decode(fromB64u(parts[1])));
-  } on FormatException {
-    throw fail('Це не QR-код активації');
+  final body = _verifiedBody(token.trim(), issuerSpki);
+  if (body['v'] != 1 && body['v'] != 2) {
+    throw fail('Невідома версія QR-коду');
   }
-  if (head['alg'] != 'ES256' || head['typ'] != 'RZA') {
-    throw fail('Це не QR-код активації');
-  }
-  final signed = verifyEs256(
-    decodeSpki(issuerSpki),
-    ascii.encode('${parts[0]}.${parts[1]}'),
-    fromB64u(parts[2]),
-  );
-  if (!signed) {
-    throw fail('QR-код видано не вашою системою обліку майна або його змінено');
-  }
-  if (body['v'] != 1) throw fail('Невідома версія QR-коду');
   if (body['app'] != app) throw fail('QR-код видано для іншого застосунку');
   if (body['dev'] != deviceCode) {
     throw fail('QR-код видано для іншого телефона');
@@ -113,5 +132,50 @@ Activation verifyActivation(
     expiresAt: expiresAt,
     scanBefore: scanBefore,
     issuedBy: (body['by'] as String?) ?? '',
+    staffId: sub['sid'] as int?,
+    staff: [
+      for (final r in (body['staff'] as List?) ?? const [])
+        StaffMember(
+          (r as List)[0] as int,
+          r[1] as String,
+          r.length > 2 ? r[2] as String : '',
+        ),
+    ],
   );
+}
+
+/// Вміст QR-коду після перевірки підпису. Два вигляди:
+/// `RZA2.<base64url(raw deflate(JSON))>.<підпис>` — стиснутий, вміщує список
+/// особового складу; JWS із `typ: RZA` — перший, без списку.
+Map<String, dynamic> _verifiedBody(String token, List<int> issuerSpki) {
+  const fail = ActivationException.new;
+  final parts = token.split('.');
+  if (parts.length != 3) throw fail('Це не QR-код активації');
+  final compact = parts[0] == 'RZA2';
+  try {
+    if (!compact) {
+      final head = jsonDecode(utf8.decode(fromB64u(parts[0])));
+      if (head['alg'] != 'ES256' || head['typ'] != 'RZA') {
+        throw fail('Це не QR-код активації');
+      }
+    }
+    if (!verifyEs256(
+      decodeSpki(issuerSpki),
+      ascii.encode('${parts[0]}.${parts[1]}'),
+      fromB64u(parts[2]),
+    )) {
+      throw fail(
+        'QR-код видано не вашою системою обліку майна або його змінено',
+      );
+    }
+    final raw = fromB64u(parts[1]);
+    return jsonDecode(
+          utf8.decode(compact ? ZLibCodec(raw: true).decode(raw) : raw),
+        )
+        as Map<String, dynamic>;
+  } on ActivationException {
+    rethrow;
+  } catch (_) {
+    throw fail('Це не QR-код активації');
+  }
 }
