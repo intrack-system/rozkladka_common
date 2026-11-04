@@ -81,6 +81,13 @@ class _ActivationScreenState extends State<ActivationScreen> {
               label: const Text('Сканувати QR-код'),
             ),
             const SizedBox(height: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 4),
+              child: Text(
+                'QR-код надіслали на цей телефон (пошта, WhatsApp)? Збережіть '
+                'зображення й на екрані сканування натисніть значок зображення.',
+              ),
+            ),
             OutlinedButton.icon(
               onPressed: _openFile,
               icon: const Icon(Icons.file_open),
