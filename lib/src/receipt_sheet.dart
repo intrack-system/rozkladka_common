@@ -54,8 +54,18 @@ class ReceiptSheet {
 
   /// Вид документа-підстави: `transfer_act` — акт приймання-передачі
   /// основних засобів, `invoice` — видаткова накладна, `works_act` — акт
-  /// приймання виконаних робіт; null — не вказано (старі таблички).
+  /// приймання виконаних робіт, `discrepancy_act` — акт про приймання
+  /// матеріалів, `inventory_act` — акт інвентаризації, `liquidation_act` —
+  /// акт оцінки; null — не вказано (старі таблички).
   final String? documentKind;
+
+  /// Другий документ (`doc.x`): номер договору, протокол інвентаризаційної
+  /// комісії, акт прибуткування, авізо.
+  final String? extraNumber;
+  final String? extraDate;
+
+  /// Юридична особа, що передає (`doc.src`).
+  final String? sourceEntity;
   final DateTime issuedAt;
   final List<ReceiptItem> items;
 
@@ -65,6 +75,9 @@ class ReceiptSheet {
     this.documentNumber,
     this.documentDate,
     this.documentKind,
+    this.extraNumber,
+    this.extraDate,
+    this.sourceEntity,
     required this.issuedAt,
     required this.items,
   });
@@ -94,12 +107,16 @@ class ReceiptSheet {
       }
       final dept = m['dept'] as Map<String, dynamic>;
       final doc = m['doc'] as Map<String, dynamic>;
+      final extra = doc['x'] as Map<String, dynamic>?;
       return ReceiptSheet(
         departmentId: dept['id'] as int,
         departmentName: dept['name'] as String,
         documentNumber: doc['n'] as String?,
         documentDate: doc['d'] as String?,
         documentKind: doc['k'] as String?,
+        extraNumber: extra?['n'] as String?,
+        extraDate: extra?['d'] as String?,
+        sourceEntity: doc['src'] as String?,
         issuedAt: DateTime.parse(m['at'] as String),
         items: [
           for (final r in m['it'] as List) ReceiptItem.fromRow(r as List),

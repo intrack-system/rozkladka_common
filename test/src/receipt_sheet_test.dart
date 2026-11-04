@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rozkladka_common/src/activation.dart';
+import 'package:rozkladka_common/src/p256.dart';
 import 'package:rozkladka_common/src/receipt_sheet.dart';
 
 import '../vectors.dart';
@@ -42,5 +44,38 @@ void main() {
       ),
       throwsA(isA<ActivationException>()),
     );
+  });
+  test('другий документ і юридична особа (doc.x, doc.src)', () async {
+    final pair = generateKeyPair();
+    final body = b64u(
+      ZLibCodec(raw: true).encode(
+        utf8.encode(
+          jsonEncode({
+            'v': 1,
+            'dept': {'id': 89, 'name': '4 ТВУЗ'},
+            'doc': {
+              'k': 'discrepancy_act',
+              'n': '7',
+              'd': '2026-11-03',
+              'x': {'n': '15/26', 'd': null},
+              'src': 'ТОВ «Постачальник»',
+            },
+            'at': '2026-11-04T10:00:00Z',
+            'it': [],
+          }),
+        ),
+      ),
+    );
+    final sig = derSignatureToRaw(
+      await signDer(pair.privateKey, ascii.encode('RZI1.$body')),
+    );
+    final s = ReceiptSheet.decode(
+      'RZI1.$body.${b64u(sig)}',
+      encodeSpki(pair.publicKey),
+    );
+    expect(s.documentKind, 'discrepancy_act');
+    expect(s.extraNumber, '15/26');
+    expect(s.extraDate, isNull);
+    expect(s.sourceEntity, 'ТОВ «Постачальник»');
   });
 }
