@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../activation.dart';
 import '../activation_service.dart';
 import '../device_code.dart';
-import 'qr_scan_screen.dart';
+import 'qr_code_views.dart';
 
 String _date(DateTime d) {
   final l = d.toLocal();
@@ -39,11 +39,19 @@ class _ActivationScreenState extends State<ActivationScreen> {
     }
   }
 
-  Future<void> _scan() async => _apply(
-    await Navigator.of(
-      context,
-    ).push<String>(MaterialPageRoute(builder: (_) => const QrScanScreen())),
-  );
+  /// Один QR-код або серія (великий список особового складу); з камери чи
+  /// з фото.
+  Future<void> _scan() async {
+    final data = await Navigator.of(context).push<List<int>>(
+      MaterialPageRoute(
+        builder: (_) => const QrSeriesScanScreen(
+          title: 'QR-код активації',
+          acceptSingle: true,
+        ),
+      ),
+    );
+    if (data != null) await _apply(utf8.decode(data, allowMalformed: true));
+  }
 
   Future<void> _openFile() async {
     final picked = await FilePicker.platform.pickFiles(withData: true);
@@ -85,7 +93,8 @@ class _ActivationScreenState extends State<ActivationScreen> {
               padding: EdgeInsets.symmetric(vertical: 4),
               child: Text(
                 'QR-код надіслали на цей телефон (пошта, WhatsApp)? Збережіть '
-                'зображення й на екрані сканування натисніть значок зображення.',
+                'зображення й на екрані сканування натисніть значок зображення '
+                '(для серії — оберіть усі зображення).',
               ),
             ),
             OutlinedButton.icon(
@@ -120,14 +129,34 @@ class _NotActivated extends StatelessWidget {
         const SizedBox(height: 16),
         FutureBuilder(
           future: code,
-          builder: (context, snap) => SelectableText(
-            snap.hasData ? formatDeviceCode(snap.data!) : '…',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              fontFamily: 'monospace',
-              letterSpacing: 2,
-            ),
-          ),
+          builder: (context, snap) {
+            final text = snap.hasData ? formatDeviceCode(snap.data!) : null;
+            return Column(
+              children: [
+                SelectableText(
+                  text ?? '…',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontFamily: 'monospace',
+                    letterSpacing: 2,
+                  ),
+                ),
+                if (text != null) ...[
+                  const SizedBox(height: 12),
+                  QrSeriesView(codes: [text]),
+                  TextButton.icon(
+                    onPressed: () => shareQrCodes(
+                      [text],
+                      'код_телефона_$text',
+                      text: 'Код телефона: $text',
+                    ),
+                    icon: const Icon(Icons.share),
+                    label: const Text('Надіслати код (пошта, WhatsApp)'),
+                  ),
+                ],
+              ],
+            );
+          },
         ),
       ],
     );

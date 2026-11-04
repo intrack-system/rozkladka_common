@@ -292,8 +292,12 @@ bool verifyTransferConfirmation(
   }
 }
 
+/// Найбільший QR-код — версія 40 (177×177 клітинок), рівень L: 2953 байти
+/// тексту. Частина в 2100 байтів у base64url із заголовком займає до ~2830.
+const qrMaxChars = 2953;
+
 /// Серія QR-кодів: `RZQ1.<відбиток>.<номер>.<усього>.<частина>`.
-List<String> splitForQr(List<int> data, {int chunkBytes = 600}) {
+List<String> splitForQr(List<int> data, {int chunkBytes = 2100}) {
   final id = b64u(sha256(data).sublist(0, 6));
   final total = (data.length / chunkBytes).ceil().clamp(1, 1 << 30);
   return [
