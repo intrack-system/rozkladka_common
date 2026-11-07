@@ -7,10 +7,34 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qr/qr.dart' as qr;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../transfer.dart';
+
+const _alnum = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ \$%*+-./:';
+
+/// QR-код найменшої версії: буквено-цифровий режим, якщо текст його
+/// дозволяє (коди передачі `RZ2:`), інакше байтовий.
+QrCode qrCodeOf(String data) {
+  final alnum = data.split('').every(_alnum.contains);
+  for (var v = 1; v <= 40; v++) {
+    final code = QrCode(v, QrErrorCorrectLevel.L);
+    if (alnum) {
+      code.addAlphaNumeric(data);
+    } else {
+      code.addData(data);
+    }
+    try {
+      qr.QrImage(code);
+      return code;
+    } on qr.InputTooLongException {
+      continue;
+    }
+  }
+  throw const FormatException('Завеликий для QR-коду');
+}
 
 /// Надсилає QR-коди зображеннями PNG (пошта, WhatsApp): по файлу на код,
 /// `<назва>_1.png`, `<назва>_2.png`… Біла рамка — щоб камера й аналіз фото
@@ -23,12 +47,7 @@ Future<void> shareQrCodes(
   final dir = await getTemporaryDirectory();
   final files = <XFile>[];
   for (var i = 0; i < codes.length; i++) {
-    final painter = QrPainter(
-      data: codes[i],
-      version: QrVersions.auto,
-      errorCorrectionLevel: QrErrorCorrectLevel.L,
-      gapless: true,
-    );
+    final painter = QrPainter.withQr(qr: qrCodeOf(codes[i]), gapless: true);
     const size = 1000.0, border = 80.0;
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder)
@@ -89,11 +108,10 @@ class _QrSeriesViewState extends State<QrSeriesView> {
       children: [
         ColoredBox(
           color: Colors.white,
-          child: QrImageView(
-            data: widget.codes[_index % widget.codes.length],
+          child: QrImageView.withQr(
+            qr: qrCodeOf(widget.codes[_index % widget.codes.length]),
             // Код версії 40 має 177 клітинок: на всю ширину екрана, до 480.
             size: (MediaQuery.sizeOf(context).width - 32).clamp(200, 480),
-            errorCorrectionLevel: QrErrorCorrectLevel.L,
           ),
         ),
         if (widget.codes.length > 1)

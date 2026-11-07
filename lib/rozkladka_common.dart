@@ -15,4 +15,6 @@ export 'src/screens/activation_screen.dart'
 export 'src/device_key.dart';
 export 'src/screens/qr_code_views.dart';
 export 'src/screens/qr_scan_screen.dart';
+export 'src/qr_pack.dart';
+export 'src/screens/pack_screens.dart';
 export 'src/transfer.dart';
