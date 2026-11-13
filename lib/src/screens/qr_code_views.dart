@@ -13,6 +13,15 @@ import 'package:share_plus/share_plus.dart';
 
 import '../transfer.dart';
 
+/// Сторона QR-коду: на ширину екрана, але щоб і в альбомній орієнтації
+/// (і над закріпленою панеллю) код було видно цілим.
+double qrSide(BuildContext context, {double margin = 32}) {
+  final size = MediaQuery.sizeOf(context);
+  final byHeight = size.height * 0.55;
+  final byWidth = size.width - margin;
+  return (byWidth < byHeight ? byWidth : byHeight).clamp(160, 480);
+}
+
 const _alnum = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ \$%*+-./:';
 
 /// QR-код найменшої версії: буквено-цифровий режим, якщо текст його
@@ -111,7 +120,7 @@ class _QrSeriesViewState extends State<QrSeriesView> {
           child: QrImageView.withQr(
             qr: qrCodeOf(widget.codes[_index % widget.codes.length]),
             // Код версії 40 має 177 клітинок: на всю ширину екрана, до 480.
-            size: (MediaQuery.sizeOf(context).width - 32).clamp(200, 480),
+            size: qrSide(context),
           ),
         ),
         if (widget.codes.length > 1)

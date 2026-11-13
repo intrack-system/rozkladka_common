@@ -46,7 +46,7 @@ class PackQr extends StatelessWidget {
     color: Colors.white,
     child: QrImageView.withQr(
       qr: qrCodeOf(code),
-      size: (MediaQuery.sizeOf(context).width - 48).clamp(200, 480),
+      size: qrSide(context, margin: 48),
     ),
   );
 }
