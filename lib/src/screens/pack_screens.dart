@@ -148,6 +148,40 @@ class _PackSendPageState extends State<PackSendPage> {
       start += p.rowsPerCode[i];
     }
     final theme = Theme.of(context);
+    final landscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
+    final panel = Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text('Підстава: ${widget.basis}', style: theme.textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => sharePackFile(p, 'Передача_майна'),
+                  child: const Text('Надіслати файлом'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: FilledButton(
+                  onPressed: _scan,
+                  child: const Text('Підтвердження'),
+                ),
+              ),
+            ],
+          ),
+          TextButton(
+            onPressed: () async => _confirm(await pickPackFile()),
+            child: const Text('Відкрити файл підтвердження'),
+          ),
+        ],
+      ),
+    );
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: ListView(
@@ -184,48 +218,14 @@ class _PackSendPageState extends State<PackSendPage> {
                 child: const Text('Скасувати передачу'),
               ),
             ),
+          if (landscape) panel,
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Material(
-          elevation: 8,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Підстава: ${widget.basis}',
-                  style: theme.textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => sharePackFile(p, 'Передача_майна'),
-                        child: const Text('Надіслати файлом'),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: _scan,
-                        child: const Text('Підтвердження'),
-                      ),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () async => _confirm(await pickPackFile()),
-                  child: const Text('Відкрити файл підтвердження'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      // В альбомній орієнтації панель — наприкінці списку, щоб не
+      // закривала код.
+      bottomNavigationBar: landscape
+          ? null
+          : SafeArea(child: Material(elevation: 8, child: panel)),
     );
   }
 }
