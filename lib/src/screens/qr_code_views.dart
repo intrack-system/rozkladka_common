@@ -17,7 +17,7 @@ import '../transfer.dart';
 /// (і над закріпленою панеллю) код було видно цілим.
 double qrSide(BuildContext context, {double margin = 32}) {
   final size = MediaQuery.sizeOf(context);
-  final byHeight = size.height * 0.8;
+  final byHeight = size.height - 150; // мінус заголовок і поля картки
   final byWidth = size.width - margin;
   return (byWidth < byHeight ? byWidth : byHeight).clamp(160, 480);
 }
