@@ -18,6 +18,10 @@ class ReceiptItem {
   final int? manufactureYear;
   final String formularNumber;
 
+  /// Код категорії для зберігання ([StorageCategory]); у старих
+  /// табличках немає — «інше майно».
+  final String? storageCategory;
+
   const ReceiptItem({
     required this.uid,
     required this.inventoryNumber,
@@ -28,6 +32,7 @@ class ReceiptItem {
     this.cost,
     this.manufactureYear,
     required this.formularNumber,
+    this.storageCategory,
   });
 
   /// Колонки за місцем; нові дописуються в кінець, тож зайві не заважають.
@@ -41,6 +46,7 @@ class ReceiptItem {
     cost: (r[6] as num?)?.toDouble(),
     manufactureYear: (r[7] as num?)?.toInt(),
     formularNumber: r[8] as String,
+    storageCategory: r.length > 9 ? r[9] as String? : null,
   );
 }
 

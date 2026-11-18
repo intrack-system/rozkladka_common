@@ -9,6 +9,7 @@ export 'src/locked_errors.dart';
 export 'src/receipt_sheet.dart';
 export 'src/screens/activation_blocked_screen.dart';
 export 'src/snapshot_share.dart';
+export 'src/storage_rules.dart';
 export 'src/submission_reminder.dart';
 export 'src/screens/activation_screen.dart'
     show ActivationScreen, ActivationLockedBanner;
