@@ -5,16 +5,56 @@ library;
 
 /// Клас складу за умовами зберігання.
 enum StorageClass {
-  light('l', 'Легкий', 'опалюване приміщення'),
-  medium('m', 'Середній', 'неопалюване приміщення'),
-  hard('h', 'Жорсткий', 'під навісом, охоронювана стоянка'),
-  veryHard('vh', 'Дуже жорсткий', 'відкритий огороджений майданчик');
+  light(
+    'l',
+    'Легкий',
+    'Л',
+    'опалюване приміщення',
+    'склад з опаленням і вентиляцією',
+  ),
+  medium(
+    'm',
+    'Середній',
+    'С',
+    'неопалюване приміщення',
+    'склад (приміщення) без опалення та вентиляції',
+  ),
+  hard(
+    'h',
+    'Жорсткий',
+    'Ж',
+    'під навісом',
+    'територія, обладнана тимчасовими спорудами, що захищають майно від '
+        'прямого сонячного світла та різного типу опадів',
+  ),
+  veryHard(
+    'vh',
+    'Дуже жорсткий',
+    'ДЖ',
+    'відкрита територія',
+    'відкрита територія без захисних споруд',
+  );
 
   final String code;
   final String title;
+
+  /// Скорочення: Л, С, Ж, ДЖ.
+  final String short;
   final String place;
 
-  const StorageClass(this.code, this.title, this.place);
+  /// Пояснення режиму для довідки.
+  final String explanation;
+
+  const StorageClass(
+    this.code,
+    this.title,
+    this.short,
+    this.place,
+    this.explanation,
+  );
+
+  /// «Легкий (Л)».
+  String get label => '$title ($short)';
 
   static StorageClass? of(String? code) =>
       values.where((c) => c.code == code).firstOrNull;
