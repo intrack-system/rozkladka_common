@@ -93,10 +93,8 @@ enum StorageCategory {
   bool fits(StorageClass? warehouse) =>
       warehouse == null || allowed.contains(warehouse);
 
-  /// «легкий (опалюване приміщення)» або перелік через «чи».
+  /// «Легкий (Л)» або перелік через «чи».
   String get allowedText => allowed.length == StorageClass.values.length
       ? 'будь-який склад'
-      : allowed
-            .map((c) => '${c.title.toLowerCase()} (${c.place})')
-            .join(' чи ');
+      : allowed.map((c) => c.label).join(' чи ');
 }
