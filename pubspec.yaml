@@ -1,6 +1,6 @@
 name: rozkladka_common
 description: "Активація польових застосунків з InTrack і підписані знімки бази."
-version: 0.6.4
+version: 0.6.5
 publish_to: none
 
 environment:

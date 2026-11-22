@@ -48,6 +48,15 @@ class Activation {
   final String position;
   final int departmentId;
   final String departmentName;
+
+  /// Орган (`organ`) чи підрозділ (`division`) Держспецзв'язку (`dept.kind`);
+  /// null — QR-код без цієї ознаки.
+  final String? departmentKind;
+
+  /// Структурний підрозділ, що експлуатує застосунок (`unit`); null — у
+  /// QR-коді його немає.
+  final int? unitId;
+  final String? unitName;
   final DateTime issuedAt;
 
   /// До коли телефон працює (кінець року); після — лише знімок.
@@ -74,6 +83,9 @@ class Activation {
     required this.position,
     required this.departmentId,
     required this.departmentName,
+    this.departmentKind,
+    this.unitId,
+    this.unitName,
     required this.issuedAt,
     required this.expiresAt,
     required this.scanBefore,
@@ -128,6 +140,12 @@ Activation verifyActivation(
     position: (sub['position'] as String?) ?? '',
     departmentId: dept['id'] as int,
     departmentName: dept['name'] as String,
+    departmentKind: switch (dept['kind']) {
+      'organ' || 'division' => dept['kind'] as String,
+      _ => null,
+    },
+    unitId: (body['unit'] as Map<String, dynamic>?)?['id'] as int?,
+    unitName: (body['unit'] as Map<String, dynamic>?)?['name'] as String?,
     issuedAt: DateTime.parse(body['iat'] as String),
     expiresAt: expiresAt,
     scanBefore: scanBefore,

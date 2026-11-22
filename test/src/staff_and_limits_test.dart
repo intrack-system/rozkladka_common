@@ -57,6 +57,32 @@ void main() {
     ],
   };
 
+  test('орган чи підрозділ і структурний підрозділ (необов\'язкові)', () async {
+    final old = verifyActivation(
+      await compactToken(payload),
+      issuerSpki: issuer,
+      app: 'rozkladka_s',
+      deviceCode: vectors['device_code'],
+      now: DateTime.utc(2026, 11, 3),
+    );
+    expect(old.unitName, isNull);
+    expect(old.departmentKind, isNull);
+    final a = verifyActivation(
+      await compactToken({
+        ...payload,
+        'dept': {'id': 89, 'name': '4 ТВУЗ', 'kind': 'division'},
+        'unit': {'id': 7, 'name': 'Відділ зв\'язку'},
+      }),
+      issuerSpki: issuer,
+      app: 'rozkladka_s',
+      deviceCode: vectors['device_code'],
+      now: DateTime.utc(2026, 11, 3),
+    );
+    expect(a.departmentKind, 'division');
+    expect(a.unitId, 7);
+    expect(a.unitName, 'Відділ зв\'язку');
+  });
+
   test('стиснутий QR-код зі списком особового складу', () async {
     final token = await compactToken(payload);
     final a = verifyActivation(
