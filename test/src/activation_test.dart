@@ -26,6 +26,20 @@ void main() {
     firstScan: firstScan,
   );
 
+  test('вектор InTrack 1.77.0: вид підрозділу й структурний підрозділ', () {
+    final a = verifyActivation(
+      vectors['activation2_token'] as String,
+      issuerSpki: base64.decode(vectors['intrack_public_spki_b64'] as String),
+      app: 'rozkladka_e',
+      deviceCode: vectors['device_code'] as String,
+      now: DateTime.utc(2026, 10, 31, 9),
+    );
+    expect(a.departmentKind, 'division');
+    expect(a.unitId, 7);
+    expect(a.unitName, 'Відділ матеріально-технічного забезпечення');
+    expect(a.staff, hasLength(2));
+  });
+
   test('чинний QR-код: особа й підрозділ з InTrack', () {
     final a = verify();
     expect(a.aid, payload['aid']);
